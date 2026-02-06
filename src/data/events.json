@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Carthage Festival",
+    "description": "A conference about the latest tech trends",
+    "img": "/assets/event1.jpg",
+    "price": 50,
+    "nbTickets": 5,
+    "nbParticipants": 10,
+    "like": false
+  },
+  {
+    "id": 2,
+    "name": "Music Festival",
+    "description": "Enjoy live music with famous bands",
+    "img": "/assets/event3.jpg",
+    "price": 30,
+    "nbTickets": 0,
+    "nbParticipants": 100,
+    "like": true
+  }
+]
