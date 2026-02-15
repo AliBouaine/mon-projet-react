@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Button, Col } from 'react-bootstrap';
-
+import { Link } from "react-router-dom";
 const Event = ({ event, buyEvent, toggleLike }) => {
   return (
     <Col md={4} className="mb-4">
@@ -9,7 +9,11 @@ const Event = ({ event, buyEvent, toggleLike }) => {
 />
 
         <Card.Body>
-          <Card.Title>{event.name}</Card.Title>
+          <Card.Title>
+            <Link to={`/event/${event.name}`}>
+              {event.name}
+            </Link>
+          </Card.Title>
           <Card.Text>{event.description}</Card.Text>
 
           <p><strong>Price:</strong> {event.price} DT</p>

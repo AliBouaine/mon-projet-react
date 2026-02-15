@@ -1,30 +1,26 @@
-import React, { Component } from "react";
- 
-class LifecycleDemo extends Component {
-  constructor(props) {
-    super(props);
-    console.log("Constructor : Initialisation du composant");
-  }
- 
-  static getDerivedStateFromProps(nextProps, nextState) {
-    console.log("getDerivedStateFromProps : Mise à jour de l'état à partir des props");
-    // Aucune mise à jour d'état ici
-    return null; // retourne null si l'état n'a pas besoin d'être modifié
-  }
- 
-  componentDidMount() {
-    console.log("componentDidMount : Le composant est monté dans le DOM");
-  }
- 
-  render() {
-    console.log("Render : Génération du DOM");
-    return (
-      <div>
-        <h1>Phase de montage - LifecycleDemo</h1>
-        <p>Le composant est monté et prêt.</p>
-      </div>
-    );
-  }
-}
- 
-export default LifecycleDemo;
+import React from "react";
+import { Navbar, Nav, Container } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
+
+const NavigationBar = () => {
+  return (
+    <Navbar bg="dark" variant="dark" expand="lg">
+      <Container>
+        <Navbar.Brand>Event Manager</Navbar.Brand>
+
+        <Nav className="me-auto">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? "nav-link text-warning" : "nav-link"
+            }
+          >
+            Events
+          </NavLink>
+        </Nav>
+      </Container>
+    </Navbar>
+  );
+};
+
+export default NavigationBar;
