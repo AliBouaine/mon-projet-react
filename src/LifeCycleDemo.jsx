@@ -6,7 +6,8 @@ class LifecycleDemo extends Component {
     console.log("Constructor : Initialisation du composant");
   }
  
-  static getDerivedStateFromProps(nextProps, nextState) {
+  // eslint-disable-next-line no-unused-vars
+  static getDerivedStateFromProps(_nextProps, _nextState) {
     console.log("getDerivedStateFromProps : Mise à jour de l'état à partir des props");
     // Aucune mise à jour d'état ici
     return null; // retourne null si l'état n'a pas besoin d'être modifié

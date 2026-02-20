@@ -17,6 +17,9 @@ const NavigationBar = () => {
           >
             Events
           </NavLink>
+          <NavLink to="/add" className="nav-link">
+            Add New Event
+          </NavLink>
         </Nav>
       </Container>
     </Navbar>

@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Alert } from 'react-bootstrap';
 import Event from './Event';
-import eventsData from '../data/events.json';
-
+import { getallEvents } from "../service/api";
 
 const Events = () => {
-  const [events, setEvents] = useState(eventsData);
+  const [events, setEvents] = useState([]);
   const [showBookMsg, setShowBookMsg] = useState(false);
   const [showWelcomeMsg, setShowWelcomeMsg] = useState(false);
-
+useEffect(() => {
+  getallEvents()
+    .then((res) => {
+      setEvents(res.data);
+    })
+    .catch((err) => console.log(err));
+}, []);
   // componentDidMount
   useEffect(() => {
     console.log("Component mounted");

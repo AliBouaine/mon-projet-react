@@ -1,7 +1,10 @@
 import React from 'react';
 import { Card, Button, Col } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import { deleteEvent } from "../service/api";
+import { useNavigate } from "react-router-dom";
 const Event = ({ event, buyEvent, toggleLike }) => {
+  const navigate = useNavigate();
   return (
     <Col md={4} className="mb-4">
       <Card>
@@ -32,7 +35,17 @@ const Event = ({ event, buyEvent, toggleLike }) => {
           >
             Book an event
           </Button>
-
+          <Button onClick={() => navigate(`/update/${event.id}`)}>
+             Update Event
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+            deleteEvent(event.id).then(() => window.location.reload());
+          }}
+>
+          Delete Event
+          </Button>
           <Button
             variant={event.like ? "danger" : "success"}
             onClick={() => toggleLike(event.id)}

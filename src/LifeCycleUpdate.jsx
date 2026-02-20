@@ -7,7 +7,8 @@ class UpdatingDemo extends Component {
     console.log("Constructor : Initialisation du composant");
   }
  
-  static getDerivedStateFromProps(nextProps, nextState) {
+  // eslint-disable-next-line no-unused-vars
+  static getDerivedStateFromProps(_nextProps, _nextState) {
     console.log("getDerivedStateFromProps : Mise à jour de l'état à partir des props");
     // Cette méthode peut être utilisée pour ajuster l'état en fonction des nouvelles props.
     // Ici, elle ne fait rien, mais elle pourrait, par exemple, mettre à jour l'état selon des props.

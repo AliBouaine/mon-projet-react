@@ -5,6 +5,8 @@ import RootLayout from "./RootLayout";
 const Events = lazy(() => import("./components/Events"));
 const EventDetails = lazy(() => import("./components/EventDetails"));
 const NotFound = lazy(() => import("./components/NotFound"));
+const AddEvent = lazy(() => import("./components/AddEvent"));
+const UpdateEvent = lazy(() => import("./components/UpdateEvent"));
 
 const router = createBrowserRouter([
   {
@@ -13,7 +15,11 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Events /> },
       { path: "/event/:name", element: <EventDetails /> },
-      { path: "*", element: <NotFound /> }
+      { path: "*", element: <NotFound /> },
+      { path: "/add", element: <AddEvent /> },
+      { path: "/update/:id", element: <UpdateEvent /> },
+      { index: true, element: <Events /> }
+       
     ]
   }
 ]);
