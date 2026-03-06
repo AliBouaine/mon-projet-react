@@ -1,19 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Alert } from 'react-bootstrap';
+import { Row, Alert, Spinner } from 'react-bootstrap';
 import Event from './Event';
-import { getallEvents } from "../service/api";
+import { deleteEvent } from "../service/api";
+import useEventStore from "../ZustandStore/useEventStore";
+import useFavouriteStore from "../ZustandStore/useFavouriteStore";
 
 const Events = () => {
-  const [events, setEvents] = useState([]);
+  const events = useEventStore((state) => state.events);
+  const fetchEvents = useEventStore((state) => state.fetchEvents);
+  const deleteEventObject = useEventStore((state) => state.deleteEventObject);
+  const updateEventObject = useEventStore((state) => state.updateEventObject);
+  const storeErrors = useEventStore((state) => state.errors);
+
   const [showBookMsg, setShowBookMsg] = useState(false);
   const [showWelcomeMsg, setShowWelcomeMsg] = useState(false);
-useEffect(() => {
-  getallEvents()
-    .then((res) => {
-      setEvents(res.data);
-    })
-    .catch((err) => console.log(err));
-}, []);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [errorLoading, setErrorLoading] = useState(null);
+  const favourites = useFavouriteStore((s) => s.favourites);
+
+  useEffect(() => {
+    fetchEvents()
+      .catch((err) => {
+        console.error(err);
+        setErrorLoading("Impossible de charger les événements. Vérifiez que le serveur JSON tourne (npm run server)");
+      })
+      .finally(() => setLoadingEvents(false));
+  }, [fetchEvents]);
   // componentDidMount
   useEffect(() => {
     console.log("Component mounted");
@@ -39,52 +51,103 @@ useEffect(() => {
   }, [showWelcomeMsg]);
 
   const buyEvent = (id) => {
-    setEvents(events.map(event =>
-      event.id === id && event.nbTickets > 0
-        ? {
-            ...event,
-            nbTickets: event.nbTickets - 1,
-            nbParticipants: event.nbParticipants + 1
-          }
-        : event
-    ));
+    const ev = events.find(e => e.id === id);
+    if (!ev || ev.nbTickets <= 0) return;
+    const updated = {
+      ...ev,
+      nbTickets: ev.nbTickets - 1,
+      nbParticipants: ev.nbParticipants + 1,
+    };
+    updateEventObject(updated);
 
     setShowBookMsg(true);
     setTimeout(() => setShowBookMsg(false), 2000);
   };
 
   const toggleLike = (id) => {
-    setEvents(events.map(event =>
-      event.id === id
-        ? { ...event, like: !event.like }
-        : event
-    ));
+    const ev = events.find(e => e.id === id);
+    if (!ev) return;
+    updateEventObject({ ...ev, like: !ev.like });
+  };
+
+  const deleteEventHandler = (id) => {
+    deleteEvent(id)
+      .then(() => {
+        deleteEventObject(id);
+      })
+      .catch(err => {
+        console.error("Delete failed", err);
+        // As fallback, still remove from store to update UI
+        deleteEventObject(id);
+      });
   };
 
   return (
     <div className="container mt-4">
-      {showWelcomeMsg && (
-        <Alert variant="success">
-          Welcome to Events Management 🎉
+      {errorLoading && (
+        <Alert variant="danger">
+          {errorLoading}
         </Alert>
       )}
 
-      {showBookMsg && (
-        <Alert variant="info">
-          You have booked an event
-        </Alert>
-      )}
+      {loadingEvents ? (
+        <div className="text-center">
+          <Spinner animation="border" />
+        </div>
+      ) : (
+        <>
+          {showWelcomeMsg && (
+            <Alert variant="success">
+              Welcome to Events Management 🎉
+            </Alert>
+          )}
 
-      <Row>
-        {events.map(event => (
-          <Event
-            key={event.id}
-            event={event}
-            buyEvent={buyEvent}
-            toggleLike={toggleLike}
-          />
-        ))}
-      </Row>
+          {showBookMsg && (
+            <Alert variant="info">
+              You have booked an event
+            </Alert>
+          )}
+
+          {favourites && favourites.length === 0 && (
+            <Alert variant="warning">Aucun élément en favoris</Alert>
+          )}
+
+          {favourites && favourites.length > 0 && (
+            <>
+              <h3>Favoris</h3>
+              <Row>
+                {favourites.map((event) => (
+                  <Event
+                    key={event.id}
+                    event={event}
+                    buyEvent={buyEvent}
+                    toggleLike={toggleLike}
+                    deleteEvent={deleteEventHandler}
+                  />
+                ))}
+              </Row>
+            </>
+          )}
+
+          {events.length === 0 && (
+            <Alert variant="warning">
+              Aucun événement trouvé.
+            </Alert>
+          )}
+
+          <Row>
+            {events.map(event => (
+              <Event
+                key={event.id}
+                event={event}
+                buyEvent={buyEvent}
+                toggleLike={toggleLike}
+                deleteEvent={deleteEventHandler}
+              />
+            ))}
+          </Row>
+        </>
+      )}
     </div>
   );
 };

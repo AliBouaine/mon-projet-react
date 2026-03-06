@@ -7,6 +7,8 @@ import ColorBox from './ColorBox';
 import NotesManager from './NotesManager';
 import TodoList from './TodoList';
 import Events from './components/Events';
+import { RouterProvider } from 'react-router-dom';
+import router from './router';
 
 function App() {
   return (
@@ -24,7 +26,7 @@ function App() {
 
     </div>*/
     <div>
-      <Events />
+      <RouterProvider router={router} />
     </div>
   );
 }

@@ -7,6 +7,7 @@ const EventDetails = lazy(() => import("./components/EventDetails"));
 const NotFound = lazy(() => import("./components/NotFound"));
 const AddEvent = lazy(() => import("./components/AddEvent"));
 const UpdateEvent = lazy(() => import("./components/UpdateEvent"));
+const Favorites = lazy(() => import("./components/Favorites"));
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
       { path: "*", element: <NotFound /> },
       { path: "/add", element: <AddEvent /> },
       { path: "/update/:id", element: <UpdateEvent /> },
+      { path: "/favorites", element: <Favorites /> },
       { index: true, element: <Events /> }
        
     ]

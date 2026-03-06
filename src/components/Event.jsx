@@ -1,15 +1,27 @@
 import React from 'react';
 import { Card, Button, Col } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import { deleteEvent } from "../service/api";
 import { useNavigate } from "react-router-dom";
-const Event = ({ event, buyEvent, toggleLike }) => {
+import useFavouriteStore from "../ZustandStore/useFavouriteStore";
+const Event = ({ event, buyEvent, toggleLike, deleteEvent }) => {
   const navigate = useNavigate();
+  const isFavourited = useFavouriteStore((s) => s.isFavourited(event.id));
+  const toggleFavourite = useFavouriteStore((s) => s.toggleFavourite);
   return (
     <Col md={4} className="mb-4">
       <Card>
-        <Card.Img variant="top" src={event.img}   style={{ height: "200px", objectFit: "cover" }}
-/>
+        {/* if img value is just a filename we assume it lives in public/assets */}
+      <Card.Img
+        variant="top"
+        src={
+          event.img
+            ? event.img.startsWith("/")
+              ? event.img
+              : `/assets/${event.img}`
+            : "/assets/404-error-not-found-badge.png"
+        }
+        style={{ height: "200px", objectFit: "cover" }}
+      />
 
         <Card.Body>
           <Card.Title>
@@ -40,17 +52,22 @@ const Event = ({ event, buyEvent, toggleLike }) => {
           </Button>
           <Button
             variant="danger"
-            onClick={() => {
-            deleteEvent(event.id).then(() => window.location.reload());
-          }}
->
-          Delete Event
+            onClick={() => deleteEvent(event.id)}
+          >
+            Delete Event
           </Button>
           <Button
             variant={event.like ? "danger" : "success"}
             onClick={() => toggleLike(event.id)}
           >
             {event.like ? "Dislike" : "Like"}
+          </Button>
+          <Button
+            variant={isFavourited ? "warning" : "outline-primary"}
+            className="ms-2"
+            onClick={() => toggleFavourite(event)}
+          >
+            {isFavourited ? "Retirer favori" : "Ajouter favori"}
           </Button>
         </Card.Body>
       </Card>

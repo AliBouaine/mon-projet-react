@@ -20,6 +20,9 @@ const NavigationBar = () => {
           <NavLink to="/add" className="nav-link">
             Add New Event
           </NavLink>
+          <NavLink to="/favorites" className={({ isActive }) => isActive ? "nav-link text-warning" : "nav-link"}>
+            Favoris
+          </NavLink>
         </Nav>
       </Container>
     </Navbar>
